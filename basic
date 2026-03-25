@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Market Signal</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
+    body {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle at top, #0f172a, #020617);
+      color: white;
+    }
+
+    .container {
+      width: 380px;
+      padding: 40px;
+      border-radius: 24px;
+      backdrop-filter: blur(20px);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+      text-align: center;
+    }
+
+    h2 { margin-bottom: 20px; font-weight: 600; }
+
+    input {
+      width: 100%; padding: 12px; margin: 10px 0;
+      border-radius: 10px; border: none; outline: none;
+      background: rgba(255,255,255,0.08); color: white;
+    }
+
+    button {
+      width: 100%; padding: 12px; margin-top: 10px;
+      border: none; border-radius: 10px;
+      background: linear-gradient(135deg, #3b82f6, #6366f1);
+      color: white; font-weight: 600; cursor: pointer;
+    }
+
+    .signal {
+      display: none;
+      margin-top: 20px;
+      font-size: 70px;
+      font-weight: 700;
+      padding: 30px;
+      border-radius: 20px;
+    }
+
+    .up { background: linear-gradient(135deg, #16a34a, #22c55e); }
+    .down { background: linear-gradient(135deg, #dc2626, #ef4444); }
+
+    .error { color: #f87171; font-size: 13px; }
+
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+      display: none;
+    }
+
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      font-size: 14px;
+    }
+
+    th { opacity: 0.7; }
+
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <div id="loginBox">
+      <h2>Market Access</h2>
+      <input type="text" id="username" placeholder="User ID">
+      <input type="password" id="password" placeholder="Password">
+      <button onclick="login()">Enter</button>
+      <div id="error" class="error"></div>
+    </div>
+
+    <div id="date" style="margin-top:10px; opacity:0.7; font-size:14px;"></div>
+    <div id="signal" class="signal"></div>
+
+    <table id="infoTable">
+      <tr>
+        <th>Opening Condition</th>
+        <th>Expectation</th>
+      </tr>
+      <tbody id="tableBody"></tbody>
+    </table>
+
+  </div>
+
+  <script>
+    const VALID_USER = "trendpredict";
+    const VALID_PASS = "option1999";
+
+    // ===== MANUAL CONTROL =====
+    // Change this value daily based on your logic
+    const MARKET_SIGNAL = "DOWN"; // "UP" or "DOWN"
+    const DISPLAY_DATE = "25 Mar 2026"; // change manually
+    // =========================
+
+    function login() {
+      const user = document.getElementById("username").value;
+      const pass = document.getElementById("password").value;
+      const error = document.getElementById("error");
+
+      if (user === VALID_USER && pass === VALID_PASS) {
+        document.getElementById("loginBox").style.display = "none";
+        showSignal();
+      } else {
+        error.innerText = "Invalid credentials";
+      }
+    }
+
+    function showSignal() {
+      const dateBox = document.getElementById("date");
+      dateBox.innerText = DISPLAY_DATE;
+      const signalBox = document.getElementById("signal");
+      const table = document.getElementById("infoTable");
+      const tableBody = document.getElementById("tableBody");
+
+      signalBox.style.display = "block";
+      table.style.display = "table";
+
+      if (MARKET_SIGNAL === "UP") {
+        signalBox.innerHTML = "UP ↑";
+        signalBox.className = "signal up";
+
+        tableBody.innerHTML = `
+          <tr>
+            <td>Flat to -150 points</td>
+            <td>Higher chance of going UP</td>
+          </tr>
+          <tr>
+            <td>+90 to +150 points</td>
+            <td>Trend may not be valid (uncertain zone)</td>
+          </tr>
+          <tr>
+            <td>Above +150 points</td>
+            <td>Likely to continue UP trend</td>
+          </tr>
+        `;
+
+      } else {
+        signalBox.innerHTML = "DOWN ↓";
+        signalBox.className = "signal down";
+
+        tableBody.innerHTML = `
+          <tr>
+            <td>Flat to +150 points</td>
+            <td>Higher chance of going DOWN</td>
+          </tr>
+          <tr>
+            <td>-90 to -150 points</td>
+            <td>Trend may not be valid (uncertain zone)</td>
+          </tr>
+          <tr>
+            <td>Below -150 points</td>
+            <td>Likely to continue DOWN trend</td>
+          </tr>
+        `;
+      }
+    }
+  </script>
+
+</body>
+</html>
